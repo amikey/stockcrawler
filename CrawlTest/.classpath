@@ -34,5 +34,6 @@
 	<classpathentry kind="lib" path="lib/json-20080701.jar"/>
 	<classpathentry kind="lib" path="lib/commons-exec-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/htmlunit-2.15.jar" sourcepath="/htmlunit"/>
+	<classpathentry kind="lib" path="lib/htmlunit-core-js-2.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
