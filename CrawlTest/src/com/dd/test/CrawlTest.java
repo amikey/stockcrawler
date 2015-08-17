@@ -3,7 +3,7 @@ package com.dd.test;
 import us.codecraft.webmagic.Spider;
 
 import com.dd.htmlunit.downloader.HtmlUnitDownLoader;
-
+ 
 public class CrawlTest {
 	public static void main(String[] args) {
 		TaobaoPageProcessor pageProcessor = new TaobaoPageProcessor();
@@ -13,7 +13,7 @@ public class CrawlTest {
 				//s.addUrl("http://s.taobao.com/search?q=dell%202414")
 				s.addUrl("http://stock.finance.sina.com.cn/usstock/quotes/AAC.html");
 				//.setDownloader(new SeleniumDownloader(System.getProperty("user.dir")+"/driver/chromedriver.exe"));
-				s.setDownloader(new HtmlUnitDownLoader());
+				s.setDownloader(new HtmlUnitDownLoader()).thread(10);
 				s.run();
 		System.out.println("....................."+pageProcessor.getHtml());
 		
