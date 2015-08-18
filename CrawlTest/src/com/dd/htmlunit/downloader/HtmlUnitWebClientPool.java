@@ -85,6 +85,7 @@ public class HtmlUnitWebClientPool {
         if (!b) {
             throw new IllegalStateException("Already closed!");
         }
+        if(webClientList ==null) return;
         for (WebClient webClient : webClientList) {
             logger.info("Quit webDriver" + webClient);
             webClient.closeAllWindows();

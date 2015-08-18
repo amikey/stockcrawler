@@ -53,12 +53,18 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	@Override
 	public void close() throws IOException {
 		// TODO Auto-generated method stub
+		if(htmlUnitWebClientPool != null)
 		htmlUnitWebClientPool.closeAll();
 	}
 
+	private void close(WebClient webClient){
+		logger.info("Quit webDriver" + webClient);
+        webClient.closeAllWindows();
+        webClient=null;
+	}
 	@SuppressWarnings("deprecation")
-	
-	public Page download11(Request request, Task task) {
+	@Override
+	public Page download(Request request, Task task) {
 		// TODO Auto-generated method stub
 		WebClient webClient;	
 		try{
@@ -80,7 +86,7 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 		     //模拟浏览器打开一个目标网址,先用一个试试看
 			//设置webClient的相关参数
 	        webClient.getOptions().setJavaScriptEnabled(true);
-	        webClient.getOptions().setCssEnabled(false);
+	        webClient.getOptions().setCssEnabled(true);
 	        webClient.setAjaxController(new NicelyResynchronizingAjaxController());
 	        //webClient.getOptions().setTimeout(50000);
 	        webClient.getOptions().setThrowExceptionOnScriptError(false);
@@ -90,13 +96,14 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	            System.out.println("为了获取js执行的数据 线程开始沉睡等待");
 	            Thread.sleep(this.sleepTime);//主要是这个线程的等待 因为js加载也是需要时间的
 	            System.out.println("线程结束沉睡");
-	            String html = rootPage.asXml();
+	            String html = rootPage.asText();
 	            System.out.println(html);
 	            Page page = new Page();
 	            page.setRawText(html);
 	            page.setHtml(new Html(UrlUtils.fixAllRelativeHrefs(html, request.getUrl())));
 	            page.setUrl(new PlainText(request.getUrl()));
 	            page.setRequest(request);
+	            this.close(webClient);
 	            return page;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -107,8 +114,8 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	}
 
 	@SuppressWarnings("deprecation")
-	@Override
-	public Page download(Request request, Task task) {
+	//@Override
+	public Page download22(Request request, Task task) {
 		// TODO Auto-generated method stub
 		WebClient webClient;	
 		checkInit();
@@ -118,6 +125,7 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	        logger.info("downloading page " + request.getUrl());
 	        	      
 	        CookieManager manage = new CookieManager();
+	        manage.setCookiesEnabled(true);
 	        Site site = task.getSite();
 	        if (site.getCookies() != null) {
 	            for (Map.Entry<String, String> cookieEntry : site.getCookies().entrySet()) {
@@ -126,6 +134,13 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	            }
 	        }
 	        webClient.setCookieManager(manage);
+	        
+	        //设置不必要控制
+	        webClient.getOptions().setCssEnabled(false);
+	        webClient.getOptions().setJavaScriptEnabled(true);	        
+	        webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+	        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+	        webClient.getOptions().setThrowExceptionOnScriptError(false);
 	        
 		   /**** WebClient webClient=new WebClient(BrowserVersion.FIREFOX_24);
 		     //模拟浏览器打开一个目标网址,先用一个试试看
