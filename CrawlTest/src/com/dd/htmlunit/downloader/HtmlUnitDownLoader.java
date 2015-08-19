@@ -21,6 +21,7 @@ import us.codecraft.webmagic.utils.UrlUtils;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.CookieManager;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -63,8 +64,8 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
         webClient=null;
 	}
 	@SuppressWarnings("deprecation")
-	@Override
-	public Page download(Request request, Task task) {
+	//@Override
+	public Page download11(Request request, Task task) {
 		// TODO Auto-generated method stub
 		WebClient webClient;	
 		try{
@@ -96,8 +97,15 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	            System.out.println("为了获取js执行的数据 线程开始沉睡等待");
 	            Thread.sleep(this.sleepTime);//主要是这个线程的等待 因为js加载也是需要时间的
 	            System.out.println("线程结束沉睡");
-	            String html = rootPage.asText();
-	            System.out.println(html);
+	            String html="";
+	            if (rootPage instanceof SgmlPage) {
+	                html= ((SgmlPage) rootPage).asXml();
+	              }else{
+	              WebResponse response = rootPage.getWebResponse();
+	                html=response.getContentAsString();
+	              }
+	            //String html = rootPage.asText();
+	            //System.out.println(html);
 	            Page page = new Page();
 	            page.setRawText(html);
 	            page.setHtml(new Html(UrlUtils.fixAllRelativeHrefs(html, request.getUrl())));
@@ -114,8 +122,8 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	}
 
 	@SuppressWarnings("deprecation")
-	//@Override
-	public Page download22(Request request, Task task) {
+	@Override
+	public Page download(Request request, Task task) {
 		// TODO Auto-generated method stub
 		WebClient webClient;	
 		checkInit();
@@ -156,12 +164,20 @@ public class HtmlUnitDownLoader implements Downloader, Closeable {
 	            System.out.println("为了获取js执行的数据 线程开始沉睡等待");
 	            Thread.sleep(this.sleepTime);//主要是这个线程的等待 因为js加载也是需要时间的
 	            System.out.println("线程结束沉睡");
-	            WebResponse response = rootPage.getWebResponse();
+	           // WebResponse response = rootPage.getWebResponse();
 	            //WebElement html = rootPage.getByXPath("/html");
-	            System.out.println(rootPage);
+	            //System.out.println(rootPage);
+	            String html="";
+	            if (rootPage instanceof SgmlPage) {
+	                html= ((SgmlPage) rootPage).asXml();
+	              }else{
+	              WebResponse response = rootPage.getWebResponse();
+	                html=response.getContentAsString();
+	              }
+	              //return response.getContentAsString();
 	            Page page = new Page();
-	            page.setRawText(response.getContentAsString());
-	            page.setHtml(new Html(UrlUtils.fixAllRelativeHrefs(response.getContentAsString(), request.getUrl())));
+	            page.setRawText(html);
+	            page.setHtml(new Html(UrlUtils.fixAllRelativeHrefs(html, request.getUrl())));
 	            page.setUrl(new PlainText(request.getUrl()));
 	            page.setRequest(request);
 	            return page;

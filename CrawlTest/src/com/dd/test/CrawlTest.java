@@ -1,9 +1,8 @@
 package com.dd.test;
 
-import main.java.us.codecraft.webmagic.downloader.selenium.SeleniumDownloader;
 import us.codecraft.webmagic.Spider;
 
-import com.dd.htmlunit.driver.downloader.htmlunitDriverDownLoader;
+import com.dd.htmlunit.downloader.HtmlUnitDownLoader;
 
 public class CrawlTest {
 
@@ -16,8 +15,8 @@ public class CrawlTest {
 		s.addUrl("http://stock.finance.sina.com.cn/usstock/quotes/AAC.html");
 		// .setDownloader(new
 		// SeleniumDownloader(System.getProperty("user.dir")+"/driver/chromedriver.exe"));
-		//s.setDownloader(new HtmlUnitDownLoader()).thread(5);
-		s.setDownloader(new htmlunitDriverDownLoader()).thread(5);
+		s.setDownloader(new HtmlUnitDownLoader()).thread(5);
+		//s.setDownloader(new htmlunitDriverDownLoader()).thread(5);
 		
 		s.run();
 		System.out.println("..............KKKKKK......." + pageProcessor.getHtml());
